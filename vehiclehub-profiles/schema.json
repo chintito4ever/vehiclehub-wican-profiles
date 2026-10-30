@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vehiclehub.wican.vehicle-profile.v1",
+  "title": "VehicleHub WiCAN vehicle profile (v1)",
+  "description": "A versioned, evidence-backed AutoPID configuration for one vehicle. The firmware re-validates every profile before applying it (main/vehicle_profile.c); this schema is the structural contract checked in CI by tools/vh_profile_catalog.py. Profiles never contain VINs, Wi-Fi, MQTT, VPN or destination credentials, or device topic bases.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "profile_id", "profile_version", "status", "title", "vehicle", "compatibility", "vehiclehub", "autopid", "passive_can", "provenance"],
+  "properties": {
+    "schema": {"const": "vehiclehub.wican.vehicle-profile.v1"},
+    "profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,47}$"},
+    "profile_version": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]{1,24})?$"},
+    "status": {"enum": ["complete", "draft"]},
+    "title": {"type": "string", "minLength": 3, "maxLength": 80},
+    "vehicle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["make", "model", "powertrain"],
+      "properties": {
+        "make": {"type": "string", "minLength": 1, "maxLength": 32},
+        "model": {"type": "string", "minLength": 1, "maxLength": 32},
+        "model_years": {"type": "array", "minItems": 1, "maxItems": 16, "items": {"type": "integer", "minimum": 1996, "maximum": 2100}},
+        "generation": {"type": "string", "maxLength": 32},
+        "variant": {"type": "string", "maxLength": 32},
+        "powertrain": {"enum": ["ice", "hybrid", "phev", "ev"]}
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hardware", "firmware_min", "firmware_capabilities", "vehicle_state_provider"],
+      "properties": {
+        "hardware": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"enum": ["WICAN_PRO", "WICAN_V300", "WICAN_V210", "WICAN_USB_V100"]}},
+        "firmware_min": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]{1,24})?$"},
+        "firmware_capabilities": {"type": "array", "maxItems": 16, "items": {"type": "string", "pattern": "^[a-z0-9_.]{3,48}$"}},
+        "obd_protocol": {"enum": ["ATSP6", "ATSP7", "ATSP8", "ATSP9"]},
+        "can_datarate": {"enum": ["125K", "250K", "500K", "1000K"]},
+        "vehicle_state_provider": {"enum": ["ice_obd_rpm", "configured_activity_signal"]},
+        "activity_parameter_id": {"type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,48}$"}
+      }
+    },
+    "vehiclehub": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["telemetry_contract", "trip_groups", "required_fields", "group_topic_template"],
+      "properties": {
+        "telemetry_contract": {"const": "vehiclehub.wican.autopid.v1"},
+        "vehiclehub_profile_id": {"type": "string", "pattern": "^[a-z0-9_]{3,64}$"},
+        "group_topic_template": {"const": "{topic_base}/autopid/group/{slug}"},
+        "trip_groups": {"type": "array", "maxItems": 4, "items": {"type": "string", "pattern": "^[a-z0-9-]{1,32}$"}},
+        "required_fields": {"type": "object", "maxProperties": 16, "additionalProperties": {"type": "array", "maxItems": 32, "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]{1,48}$"}}},
+        "backend_owned_calculations": {"type": "array", "maxItems": 32, "items": {"type": "string", "pattern": "^[a-z0-9_]{2,48}$"}}
+      }
+    },
+    "autopid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["car_init", "period_bounds_ms", "groups"],
+      "properties": {
+        "car_init": {"type": ["string", "null"], "maxLength": 128},
+        "period_bounds_ms": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "max"],
+          "properties": {"min": {"type": "integer", "minimum": 100, "maximum": 3600000}, "max": {"type": "integer", "minimum": 100, "maximum": 3600000}}
+        },
+        "groups": {"type": "array", "minItems": 1, "maxItems": 24, "items": {"$ref": "#/$defs/group"}}
+      }
+    },
+    "passive_can": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rules"],
+      "properties": {
+        "rules": {"type": "array", "maxItems": 16, "items": {"$ref": "#/$defs/passive_rule"}}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence", "classification_basis", "notes"],
+      "properties": {
+        "evidence": {"type": "object"},
+        "classification_basis": {"type": "string", "maxLength": 400},
+        "builder": {"type": "string", "maxLength": 120},
+        "notes": {"type": "array", "maxItems": 32, "items": {"type": "string", "maxLength": 600}}
+      }
+    }
+  },
+  "$defs": {
+    "status": {"enum": ["canonical", "optional", "experimental", "unverified"]},
+    "group": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "status", "enabled", "period_ms", "condition", "mqtt_topic", "pids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,31}$"},
+        "name": {"type": "string", "pattern": "^[A-Za-z0-9 _.()/-]{1,32}$"},
+        "status": {"$ref": "#/$defs/status"},
+        "enabled": {"type": "boolean"},
+        "period_ms": {"type": ["integer", "null"], "minimum": 100, "maximum": 3600000},
+        "adjustable_period": {"type": "boolean"},
+        "can_disable": {"type": "boolean"},
+        "condition": {"enum": ["always", "voltage", "engine_running", "adaptive_rpm", "mqtt_on_demand"]},
+        "init": {"type": "string", "maxLength": 128},
+        "mqtt_topic": {"type": "string", "maxLength": 128, "pattern": "^[^+#\\u0000]*$"},
+        "pids": {"type": "array", "minItems": 1, "maxItems": 48, "items": {"$ref": "#/$defs/pid"}}
+      }
+    },
+    "pid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "pid", "enabled", "parameters"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,47}$"},
+        "pid": {"type": "string", "pattern": "^[0-9A-Fa-f]{2,16}$"},
+        "pid_type": {"enum": ["std"]},
+        "enabled": {"type": "boolean"},
+        "user_toggle": {"type": "boolean"},
+        "description": {"type": "string", "maxLength": 64},
+        "parameters": {"type": "array", "minItems": 1, "maxItems": 48, "items": {"$ref": "#/$defs/parameter"}}
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "expression", "status", "destination_type"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]{1,48}$"},
+        "expression": {"type": "string", "maxLength": 160},
+        "unit": {"type": "string", "maxLength": 16},
+        "class": {"type": "string", "maxLength": 24},
+        "sensor_type": {"enum": ["sensor", "binary"]},
+        "min": {"type": ["string", "number"]},
+        "max": {"type": ["string", "number"]},
+        "onchange": {"type": "boolean"},
+        "destination_type": {"enum": ["MQTT_Grp", "MQTT_Topic", "Default"]},
+        "send_to": {"type": "string", "maxLength": 128, "pattern": "^[^+#\\u0000]*$"},
+        "enabled": {"type": "boolean"},
+        "parameter_id": {"type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,48}$"},
+        "status": {"$ref": "#/$defs/status"}
+      }
+    },
+    "passive_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "can_id", "extd", "status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9_]{1,24}$"},
+        "enable": {"type": "boolean"},
+        "can_id": {"type": ["integer", "string"]},
+        "extd": {"type": "boolean"},
+        "interval_ms": {"type": "integer", "minimum": 1000, "maximum": 3600000},
+        "max_age_ms": {"type": "integer", "minimum": 1000, "maximum": 7200000},
+        "label": {"type": "string", "pattern": "^[A-Za-z0-9 _.:-]{0,24}$"},
+        "match": {"type": "object"},
+        "status": {"enum": ["canonical", "optional"]}
+      }
+    }
+  }
+}

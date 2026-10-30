@@ -1,0 +1,30 @@
+name: Validate catalog
+
+# Schema, contract, catalog sha256/size and immutability checks for the
+# VehicleHub WiCAN profile catalog.  Standard library Python only; no network.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Catalog, schema, contract and immutability
+        run: |
+          BASE="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [ -n "$BASE" ] && [ "$BASE" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            python3 vehiclehub-profiles/tools/vh_profile_catalog.py validate --base-ref "$BASE"
+          else
+            python3 vehiclehub-profiles/tools/vh_profile_catalog.py validate
+          fi

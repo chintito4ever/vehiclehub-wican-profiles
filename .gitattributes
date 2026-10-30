@@ -1,0 +1,3 @@
+# Every published file is hashed byte for byte (catalog.json sha256, device-side
+# verification); Git must never convert line endings on checkout.
+* -text

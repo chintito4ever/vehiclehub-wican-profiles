@@ -1,0 +1,739 @@
+{
+  "schema": "vehiclehub.wican.vehicle-profile.v1",
+  "profile_id": "toyota-camry-2020-xse-ice",
+  "profile_version": "0.1.0-draft.1",
+  "status": "draft",
+  "title": "Toyota Camry 2020 XSE (ICE) - incomplete draft",
+  "vehicle": {
+    "make": "Toyota",
+    "model": "Camry",
+    "model_years": [
+      2020
+    ],
+    "variant": "XSE",
+    "powertrain": "ice"
+  },
+  "compatibility": {
+    "hardware": [
+      "WICAN_PRO"
+    ],
+    "firmware_min": "1.1.0-rc.7",
+    "firmware_capabilities": [
+      "autopid.groups.v1"
+    ],
+    "vehicle_state_provider": "ice_obd_rpm"
+  },
+  "vehiclehub": {
+    "telemetry_contract": "vehiclehub.wican.autopid.v1",
+    "vehiclehub_profile_id": "toyota_camry_2020_xse_ice",
+    "trip_groups": [
+      "fast"
+    ],
+    "required_fields": {
+      "fast": [
+        "0C-EngineRPM",
+        "0D-VehicleSpeed",
+        "10-MAFAirFlowRate"
+      ]
+    },
+    "backend_owned_calculations": [
+      "fuel_rate_from_maf",
+      "instant_mpg",
+      "trip_distance",
+      "trip_fuel",
+      "fuel_trim_correction",
+      "coasting_fuel_cut",
+      "unit_conversions"
+    ],
+    "group_topic_template": "{topic_base}/autopid/group/{slug}"
+  },
+  "autopid": {
+    "car_init": null,
+    "period_bounds_ms": {
+      "min": 1000,
+      "max": 3600000
+    },
+    "groups": [
+      {
+        "id": "fast",
+        "name": "Fast",
+        "status": "unverified",
+        "enabled": true,
+        "period_ms": null,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/fast",
+        "pids": [
+          {
+            "id": "0c-enginerpm",
+            "pid": "010C",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "0C-EngineRPM",
+            "parameters": [
+              {
+                "name": "0C-EngineRPM",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "0d-vehiclespeed",
+            "pid": "010D",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "0D-VehicleSpeed",
+            "parameters": [
+              {
+                "name": "0D-VehicleSpeed",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "10-mafairflowrate",
+            "pid": "0110",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "10-MAFAirFlowRate",
+            "parameters": [
+              {
+                "name": "10-MAFAirFlowRate",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "9d-enginefuelrate",
+            "pid": "019D",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "9D-EngineFuelRate",
+            "parameters": [
+              {
+                "name": "9D-EngineFuelRate",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "44-fuelaircmdequiv",
+            "pid": "0144",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "44-FuelAirCmdEquiv",
+            "parameters": [
+              {
+                "name": "44-FuelAirCmdEquiv",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "11-throttleposition",
+            "pid": "0111",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "11-ThrottlePosition",
+            "parameters": [
+              {
+                "name": "11-ThrottlePosition",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "medium",
+        "name": "Medium",
+        "status": "unverified",
+        "enabled": true,
+        "period_ms": null,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/medium",
+        "pids": [
+          {
+            "id": "43-absloadvalue",
+            "pid": "0143",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "43-AbsLoadValue",
+            "parameters": [
+              {
+                "name": "43-AbsLoadValue",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "0e-timingadvance",
+            "pid": "010E",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "0E-TimingAdvance",
+            "parameters": [
+              {
+                "name": "0E-TimingAdvance",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "04-calcengineload",
+            "pid": "0104",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "04-CalcEngineLoad",
+            "parameters": [
+              {
+                "name": "04-CalcEngineLoad",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "45-relthrottlepos",
+            "pid": "0145",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "45-RelThrottlePos",
+            "parameters": [
+              {
+                "name": "45-RelThrottlePos",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "62-actualengtorqpct",
+            "pid": "0162",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "62-ActualEngTorqPct",
+            "parameters": [
+              {
+                "name": "62-ActualEngTorqPct",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "06-shortfueltrimbank1",
+            "pid": "0106",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "06-ShortFuelTrimBank1",
+            "parameters": [
+              {
+                "name": "06-ShortFuelTrimBank1",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "07-longfueltrimbank1",
+            "pid": "0107",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "07-LongFuelTrimBank1",
+            "parameters": [
+              {
+                "name": "07-LongFuelTrimBank1",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "08-shortfueltrimbank2",
+            "pid": "0108",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "08-ShortFuelTrimBank2",
+            "parameters": [
+              {
+                "name": "08-ShortFuelTrimBank2",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "09-longfueltrimbank2",
+            "pid": "0109",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "09-LongFuelTrimBank2",
+            "parameters": [
+              {
+                "name": "09-LongFuelTrimBank2",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "slow",
+        "name": "Slow",
+        "status": "unverified",
+        "enabled": true,
+        "period_ms": null,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/slow",
+        "pids": [
+          {
+            "id": "33-absbaropres",
+            "pid": "0133",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "33-AbsBaroPres",
+            "parameters": [
+              {
+                "name": "33-AbsBaroPres",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "2e-cmdevappurge",
+            "pid": "012E",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "2E-CmdEvapPurge",
+            "parameters": [
+              {
+                "name": "2E-CmdEvapPurge",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "2f-fueltanklevel",
+            "pid": "012F",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "2F-FuelTankLevel",
+            "parameters": [
+              {
+                "name": "2F-FuelTankLevel",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "46-ambientairtemp",
+            "pid": "0146",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "46-AmbientAirTemp",
+            "parameters": [
+              {
+                "name": "46-AmbientAirTemp",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "03-fuelsystemstatus",
+            "pid": "0103",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "03-FuelSystemStatus",
+            "parameters": [
+              {
+                "name": "03-FuelSystemStatus",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "05-enginecoolanttemp",
+            "pid": "0105",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "05-EngineCoolantTemp",
+            "parameters": [
+              {
+                "name": "05-EngineCoolantTemp",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "3c-cattempbank1sens1",
+            "pid": "013C",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "3C-CatTempBank1Sens1",
+            "parameters": [
+              {
+                "name": "3C-CatTempBank1Sens1",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "3d-cattempbank2sens1",
+            "pid": "013D",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "3D-CatTempBank2Sens1",
+            "parameters": [
+              {
+                "name": "3D-CatTempBank2Sens1",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "3e-cattempbank1sens2",
+            "pid": "013E",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "3E-CatTempBank1Sens2",
+            "parameters": [
+              {
+                "name": "3E-CatTempBank1Sens2",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "3f-cattempbank2sens2",
+            "pid": "013F",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "3F-CatTempBank2Sens2",
+            "parameters": [
+              {
+                "name": "3F-CatTempBank2Sens2",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "42-controlmodulevolt",
+            "pid": "0142",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "42-ControlModuleVolt",
+            "parameters": [
+              {
+                "name": "42-ControlModuleVolt",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "53-absevapsysvappres",
+            "pid": "0153",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "53-AbsEvapSysVapPres",
+            "parameters": [
+              {
+                "name": "53-AbsEvapSysVapPres",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "8e-enginefrictionpercenttorque",
+            "pid": "018E",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "8E-EngineFrictionPercentTorque",
+            "parameters": [
+              {
+                "name": "8E-EngineFrictionPercentTorque",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "diagnostics",
+        "name": "Diagnostics",
+        "status": "unverified",
+        "enabled": true,
+        "period_ms": null,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/diagnostics",
+        "pids": [
+          {
+            "id": "4d-timerunmilon",
+            "pid": "014D",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "4D-TimeRunMILOn",
+            "parameters": [
+              {
+                "name": "4D-TimeRunMILOn",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "21-distancemilon",
+            "pid": "0121",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "21-DistanceMILOn",
+            "parameters": [
+              {
+                "name": "21-DistanceMILOn",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "1f-timesinceengstart",
+            "pid": "011F",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "1F-TimeSinceEngStart",
+            "parameters": [
+              {
+                "name": "1F-TimeSinceEngStart",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "4e-timesincecodeclear",
+            "pid": "014E",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "4E-TimeSinceCodeClear",
+            "parameters": [
+              {
+                "name": "4E-TimeSinceCodeClear",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "30-warmupssincecodeclear",
+            "pid": "0130",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "30-WarmUpsSinceCodeClear",
+            "parameters": [
+              {
+                "name": "30-WarmUpsSinceCodeClear",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "id": "31-distancesincecodeclear",
+            "pid": "0131",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "31-DistanceSinceCodeClear",
+            "parameters": [
+              {
+                "name": "31-DistanceSinceCodeClear",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "odometer",
+        "name": "Odometer",
+        "status": "unverified",
+        "enabled": true,
+        "period_ms": null,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/odometer",
+        "pids": [
+          {
+            "id": "a6-odometer",
+            "pid": "01A6",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "A6-Odometer",
+            "parameters": [
+              {
+                "name": "A6-Odometer",
+                "expression": "",
+                "status": "unverified",
+                "destination_type": "MQTT_Grp",
+                "enabled": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "passive_can": {
+    "rules": []
+  },
+  "provenance": {
+    "evidence": {
+      "kind": "vehiclehub_observed_field_names",
+      "description": "Observed WiCAN group membership recorded in the VehicleHub capability registry (production telemetry 2026-07). No device AutoPID configuration exists anywhere (backups/devices/INDEX.md: 'Camry 2020 XSE: no backup exists yet'; WICAN-126).",
+      "source": "VehicleHub docs/vehicle-profiles/VEHICLE_PROFILE_CAPABILITY_REGISTRY_2026_07.md (built-in profiles, toyota_camry_2020_xse_ice) @ edc5ffa4"
+    },
+    "classification_basis": "VehicleHub edc5ffa4: packages/shared/src/validation.ts sanitizeSample aliases (canonical), prius-wican-candidates.ts (raw-only candidates, optional)",
+    "builder": "vehiclehub-profiles/tools/build_profile_from_snapshot.py",
+    "notes": [
+      "INCOMPLETE DRAFT. Not VehicleHub-ready and refused by the firmware apply path (status draft).",
+      "Only group membership and standard-PID field names are evidenced. Polling periods, group init strings, ECU headers, OBD protocol and CAN bitrate are unknown and deliberately omitted.",
+      "Every field name is a firmware standard-PID name (main/obd2_standard_pids.h, format %02X-<name>); the request is 01 + the PID byte and the decoding is the firmware's standard table.",
+      "The registry lists oxygen-sensor detail PIDs only as wildcards (24-*, 28-*, 38-*); the exact parameter names are unknown and are not included.",
+      "9D-EngineFuelRate was always 0 in production data (VehicleHub 2026-08-06 fuel-cut readiness audit) and is observe-only.",
+      "To complete this profile: capture a read-only /load_auto_pid snapshot from the Camry device (WICAN-126), then rebuild it with build_profile_from_snapshot.py."
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema": "vehiclehub.wican.profile-catalog.v1",
+  "profiles": [
+    {
+      "profile_id": "honda-accord-2017-ex",
+      "title": "Honda Accord 2017 EX",
+      "make": "Honda",
+      "model": "Accord",
+      "powertrain": "ice",
+      "latest": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "complete",
+          "path": "honda/accord-2017-ex/1.0.0.json",
+          "sha256": "e87150abd60b9a792a05fae03e2d6cff9e391cb69d8d073d37494fd24c85e6af",
+          "size": 32101
+        }
+      ],
+      "model_years": [
+        2017
+      ],
+      "variant": "EX"
+    },
+    {
+      "profile_id": "toyota-camry-2020-xse-ice",
+      "title": "Toyota Camry 2020 XSE (ICE) - incomplete draft",
+      "make": "Toyota",
+      "model": "Camry",
+      "powertrain": "ice",
+      "latest": null,
+      "versions": [
+        {
+          "version": "0.1.0-draft.1",
+          "status": "draft",
+          "path": "toyota/camry-2020-xse-ice/0.1.0-draft.1.json",
+          "sha256": "53747c5012f9a7758880e225080871a816bdd161ae474ee02141a26ef41ce30f",
+          "size": 22573
+        }
+      ],
+      "model_years": [
+        2020
+      ],
+      "variant": "XSE"
+    },
+    {
+      "profile_id": "toyota-prius-gen2",
+      "title": "Toyota Prius Gen 2",
+      "make": "Toyota",
+      "model": "Prius",
+      "powertrain": "hybrid",
+      "latest": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "status": "complete",
+          "path": "toyota/prius-gen2/1.0.0.json",
+          "sha256": "4b7722dc2984367af15fccb6b378650365fa4c8000ecebd894f00d176c22217f",
+          "size": 60787
+        }
+      ],
+      "generation": "Gen 2 (NHW20)"
+    }
+  ]
+}
