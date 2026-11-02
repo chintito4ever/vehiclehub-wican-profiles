@@ -12,7 +12,7 @@ MQTT topic bases (the device's own base is written as `{topic_base}`).
 | Profile | Version | Status |
 |---|---|---|
 | Honda Accord 2017 EX | 1.0.0 | complete |
-| Toyota Prius Gen 2 (NHW20) | 1.0.0 | complete |
+| Toyota Prius Gen 2 (NHW20) | 1.1.0 | complete |
 | Toyota Camry 2020 XSE (ICE) | 0.1.0-draft.1 | **draft: cannot be installed** |
 
 The Camry entry is an incomplete draft. It has no polling periods, ECU headers, OBD

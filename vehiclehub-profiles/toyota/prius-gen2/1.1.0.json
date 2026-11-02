@@ -1,0 +1,1876 @@
+{
+  "schema": "vehiclehub.wican.vehicle-profile.v1",
+  "profile_id": "toyota-prius-gen2",
+  "profile_version": "1.1.0",
+  "status": "complete",
+  "title": "Toyota Prius Gen 2",
+  "vehicle": {
+    "make": "Toyota",
+    "model": "Prius",
+    "generation": "Gen 2 (NHW20)",
+    "powertrain": "hybrid"
+  },
+  "compatibility": {
+    "hardware": [
+      "WICAN_PRO"
+    ],
+    "firmware_min": "1.1.0-rc.7",
+    "firmware_capabilities": [
+      "autopid.groups.v1",
+      "autopid.condition.mqtt_on_demand.v1",
+      "autopid.dtc_raw.v1",
+      "autopid.parameter_id.v1"
+    ],
+    "obd_protocol": "ATSP6",
+    "can_datarate": "500K",
+    "vehicle_state_provider": "configured_activity_signal",
+    "activity_parameter_id": "ready.activity.v1"
+  },
+  "vehiclehub": {
+    "telemetry_contract": "vehiclehub.wican.autopid.v1",
+    "vehiclehub_profile_id": "toyota_prius_gen2_hybrid",
+    "trip_groups": [
+      "fast"
+    ],
+    "required_fields": {
+      "fast": [
+        "0C-EngineRPM",
+        "0D-VehicleSpeed",
+        "10-MAFAirFlowRate"
+      ],
+      "hv-battery": [
+        "hv_battery_soc",
+        "hv_battery_current_a"
+      ]
+    },
+    "backend_owned_calculations": [
+      "fuel_rate_from_maf",
+      "prius_gasoline_v1",
+      "instant_mpg",
+      "trip_distance",
+      "trip_fuel",
+      "fuel_trim_correction",
+      "hybrid_battery_health",
+      "unit_conversions"
+    ],
+    "group_topic_template": "{topic_base}/autopid/group/{slug}"
+  },
+  "autopid": {
+    "car_init": "ATSP6;",
+    "period_bounds_ms": {
+      "min": 1000,
+      "max": 3600000
+    },
+    "groups": [
+      {
+        "id": "fast",
+        "name": "Fast",
+        "status": "canonical",
+        "enabled": true,
+        "period_ms": 1000,
+        "adjustable_period": true,
+        "can_disable": false,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/fast",
+        "pids": [
+          {
+            "id": "0c-enginerpm",
+            "pid": "010C",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": false,
+            "description": "0C-EngineRPM",
+            "parameters": [
+              {
+                "name": "0C-EngineRPM",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "0d-vehiclespeed",
+            "pid": "010D",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": false,
+            "description": "0D-VehicleSpeed",
+            "parameters": [
+              {
+                "name": "0D-VehicleSpeed",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "04-calcengineload",
+            "pid": "0104",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "04-CalcEngineLoad",
+            "parameters": [
+              {
+                "name": "04-CalcEngineLoad",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "10-mafairflowrate",
+            "pid": "0110",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "10-MAFAirFlowRate",
+            "parameters": [
+              {
+                "name": "10-MAFAirFlowRate",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "45-relthrottlepos",
+            "pid": "0145",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "45-RelThrottlePos",
+            "parameters": [
+              {
+                "name": "45-RelThrottlePos",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "49-absthrottleposd",
+            "pid": "0149",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "49-AbsThrottlePosD",
+            "parameters": [
+              {
+                "name": "49-AbsThrottlePosD",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "medium",
+        "name": "Medium",
+        "status": "canonical",
+        "enabled": true,
+        "period_ms": 5000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/medium",
+        "pids": [
+          {
+            "id": "33-absbaropres",
+            "pid": "0133",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "33-AbsBaroPres",
+            "parameters": [
+              {
+                "name": "33-AbsBaroPres",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "0e-timingadvance",
+            "pid": "010E",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "0E-TimingAdvance",
+            "parameters": [
+              {
+                "name": "0E-TimingAdvance",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "11-throttleposition",
+            "pid": "0111",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "11-ThrottlePosition",
+            "parameters": [
+              {
+                "name": "11-ThrottlePosition",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "06-shortfueltrimbank1",
+            "pid": "0106",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "06-ShortFuelTrimBank1",
+            "parameters": [
+              {
+                "name": "06-ShortFuelTrimBank1",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "07-longfueltrimbank1",
+            "pid": "0107",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "07-LongFuelTrimBank1",
+            "parameters": [
+              {
+                "name": "07-LongFuelTrimBank1",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "0f-intakeairtemperature",
+            "pid": "010F",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "0F-IntakeAirTemperature",
+            "parameters": [
+              {
+                "name": "0F-IntakeAirTemperature",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "slow",
+        "name": "Slow",
+        "status": "canonical",
+        "enabled": true,
+        "period_ms": 30000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/slow",
+        "pids": [
+          {
+            "id": "05-enginecoolanttemp",
+            "pid": "0105",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "05-EngineCoolantTemp",
+            "parameters": [
+              {
+                "name": "05-EngineCoolantTemp",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "42-controlmodulevolt",
+            "pid": "0142",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "42-ControlModuleVolt",
+            "parameters": [
+              {
+                "name": "42-ControlModuleVolt",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "24-oxysensor1-faer",
+            "pid": "0124",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "24-OxySensor1_FAER",
+            "parameters": [
+              {
+                "name": "24-OxySensor1_FAER",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "24-oxysensor1-volt",
+            "pid": "0124",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "24-OxySensor1_Volt",
+            "parameters": [
+              {
+                "name": "24-OxySensor1_Volt",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "15-oxysensor2-volt",
+            "pid": "0115",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "15-OxySensor2_Volt",
+            "parameters": [
+              {
+                "name": "15-OxySensor2_Volt",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "03-fuelsystemstatus",
+            "pid": "0103",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "03-FuelSystemStatus",
+            "parameters": [
+              {
+                "name": "03-FuelSystemStatus",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "3c-cattempbank1sens1",
+            "pid": "013C",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "3C-CatTempBank1Sens1",
+            "parameters": [
+              {
+                "name": "3C-CatTempBank1Sens1",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "3e-cattempbank1sens2",
+            "pid": "013E",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "3E-CatTempBank1Sens2",
+            "parameters": [
+              {
+                "name": "3E-CatTempBank1Sens2",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "diagnostics",
+        "name": "Diagnostics",
+        "status": "canonical",
+        "enabled": true,
+        "period_ms": 120000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/diagnostics",
+        "pids": [
+          {
+            "id": "1f-timesinceengstart",
+            "pid": "011F",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "1F-TimeSinceEngStart",
+            "parameters": [
+              {
+                "name": "1F-TimeSinceEngStart",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "53-absevapsysvappres",
+            "pid": "0153",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "53-AbsEvapSysVapPres",
+            "parameters": [
+              {
+                "name": "53-AbsEvapSysVapPres",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "4d-timerunmilon",
+            "pid": "014D",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "4D-TimeRunMILOn",
+            "parameters": [
+              {
+                "name": "4D-TimeRunMILOn",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "4e-timesincecodeclear",
+            "pid": "014E",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "4E-TimeSinceCodeClear",
+            "parameters": [
+              {
+                "name": "4E-TimeSinceCodeClear",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "31-distancesincecodeclear",
+            "pid": "0131",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "31-DistanceSinceCodeClear",
+            "parameters": [
+              {
+                "name": "31-DistanceSinceCodeClear",
+                "expression": "B3",
+                "unit": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "readiness",
+        "name": "Readiness",
+        "status": "optional",
+        "enabled": true,
+        "period_ms": 300000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "mqtt_topic": "{topic_base}/autopid/group/readiness",
+        "pids": [
+          {
+            "id": "01-monitorstatus",
+            "pid": "0101",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "01-MonitorStatus",
+            "parameters": [
+              {
+                "name": "01-MonitorStatus",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          },
+          {
+            "id": "41-monstatusdrivecycle",
+            "pid": "0141",
+            "pid_type": "std",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "41-MonStatusDriveCycle",
+            "parameters": [
+              {
+                "name": "41-MonStatusDriveCycle",
+                "expression": "",
+                "unit": "",
+                "class": "",
+                "min": "",
+                "max": "",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hv-battery",
+        "name": "Hybrid Battery",
+        "status": "optional",
+        "enabled": true,
+        "period_ms": 30000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "init": "ATSH7E3;",
+        "mqtt_topic": "{topic_base}/autopid/group/hv-battery",
+        "pids": [
+          {
+            "id": "hv-battery-soc",
+            "pid": "21CE",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "HV Battery Data",
+            "parameters": [
+              {
+                "name": "hv_battery_soc",
+                "expression": "B4/2",
+                "unit": "%",
+                "class": "battery",
+                "min": "40",
+                "max": "80",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_battery_current_a",
+                "expression": "((B5*256)+B6)/100-327.68",
+                "unit": "A",
+                "class": "current",
+                "min": "-100",
+                "max": "100",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_01_v",
+                "expression": "((B7*256)+B9)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "18",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_02_v",
+                "expression": "((B10*256)+B11)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_03_v",
+                "expression": "((B12*256)+B13)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_04_v",
+                "expression": "((B14*256)+B15)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_05_v",
+                "expression": "((B17*256)+B18)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_06_v",
+                "expression": "((B19*256)+B20)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_07_v",
+                "expression": "((B21*256)+B22)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_08_v",
+                "expression": "((B23*256)+B25)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_09_v",
+                "expression": "((B26*256)+B27)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_10_v",
+                "expression": "((B28*256)+B29)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_11_v",
+                "expression": "((B30*256)+B31)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_12_v",
+                "expression": "((B33*256)+B34)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_13_v",
+                "expression": "((B35*256)+B36)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_14_v",
+                "expression": "((B37*256)+B38)/100-327.68",
+                "unit": "V",
+                "class": "voltage",
+                "min": "0",
+                "max": "20",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          },
+          {
+            "id": "hv-battery-temp-1-c",
+            "pid": "21CF",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "HV Battery Temperature Data",
+            "parameters": [
+              {
+                "name": "hv_battery_temp_1_c",
+                "expression": "((B15*256)+B17)/100-327.68",
+                "unit": "°C",
+                "class": "temperature",
+                "min": "-40",
+                "max": "100",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_battery_temp_2_c",
+                "expression": "((B18*256)+B19)/100-327.68",
+                "unit": "°C",
+                "class": "temperature",
+                "min": "-40",
+                "max": "100",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_battery_temp_3_c",
+                "expression": "((B20*256)+B21)/100-327.68",
+                "unit": "°C",
+                "class": "temperature",
+                "min": "-40",
+                "max": "100",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_battery_air_temp_c",
+                "expression": "((B4*256)+B5)/100-327.68",
+                "unit": "°C",
+                "class": "temperature",
+                "min": "-40",
+                "max": "100",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          },
+          {
+            "id": "hv-block-01-resistance",
+            "pid": "21D0",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "HV Battery Block Resistance",
+            "parameters": [
+              {
+                "name": "hv_block_01_resistance",
+                "expression": "B21*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_02_resistance",
+                "expression": "B22*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_03_resistance",
+                "expression": "B23*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_04_resistance",
+                "expression": "B25*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_05_resistance",
+                "expression": "B26*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_06_resistance",
+                "expression": "B27*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_07_resistance",
+                "expression": "B28*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_08_resistance",
+                "expression": "B29*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_09_resistance",
+                "expression": "B30*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_10_resistance",
+                "expression": "B31*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_11_resistance",
+                "expression": "B33*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_12_resistance",
+                "expression": "B34*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_13_resistance",
+                "expression": "B35*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "hv_block_14_resistance",
+                "expression": "B36*0.001",
+                "unit": "Ω",
+                "class": "resistance",
+                "min": "0",
+                "max": "0.1",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hv-system",
+        "name": "Hybrid System",
+        "status": "canonical",
+        "enabled": true,
+        "period_ms": 30000,
+        "adjustable_period": true,
+        "can_disable": false,
+        "condition": "always",
+        "init": "ATSH7E2;",
+        "mqtt_topic": "{topic_base}/autopid/group/hv-system",
+        "pids": [
+          {
+            "id": "hybrid-engine-request-flags",
+            "pid": "21C4",
+            "enabled": true,
+            "user_toggle": false,
+            "description": "Hybrid State / Engine Request Flags",
+            "parameters": [
+              {
+                "name": "hybrid_engine_request_flags",
+                "expression": "B5",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "system_main_relay_flags",
+                "expression": "B12",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "parameter_id": "ready.activity.v1",
+                "status": "canonical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "engine",
+        "name": "Engine",
+        "status": "optional",
+        "enabled": true,
+        "period_ms": 10000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "init": "ATSH7E0;",
+        "mqtt_topic": "{topic_base}/autopid/group/engine",
+        "pids": [
+          {
+            "id": "ice-actual-torque-lbft",
+            "pid": "21CD",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "ICE Actual Torque",
+            "parameters": [
+              {
+                "name": "ice_actual_torque_lbft",
+                "expression": "(B4-128)*0.7376",
+                "unit": "lb-ft",
+                "min": "0",
+                "max": "82",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          },
+          {
+            "id": "cylinder1-injection-time-ms",
+            "pid": "21F3",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "Cylinder 1 Injection Period",
+            "parameters": [
+              {
+                "name": "cylinder1_injection_time_ms",
+                "expression": "B5*0.128",
+                "unit": "ms",
+                "min": "0",
+                "max": "32.64",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cruise-control",
+        "name": "Cruise Control",
+        "status": "optional",
+        "enabled": true,
+        "period_ms": 60000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "init": "ATSH7E2;",
+        "mqtt_topic": "{topic_base}/autopid/group/cruise-control",
+        "pids": [
+          {
+            "id": "cruise-memory-speed-kmh",
+            "pid": "21D3",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "Cruise Control and Brake Switches",
+            "parameters": [
+              {
+                "name": "cruise_memory_speed_kmh",
+                "expression": "B3",
+                "unit": "km/h",
+                "min": "0",
+                "max": "150",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "cruise_throttle_opening_pct",
+                "expression": "0.3922*B4",
+                "unit": "%",
+                "min": "0",
+                "max": "100",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "cruise_main_switch",
+                "expression": "B5:0",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "cruise_ready",
+                "expression": "B5:2",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "cruise_indicator",
+                "expression": "B5:5",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "cruise_active",
+                "expression": "B5:6",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "shifter_d_position",
+                "expression": "B5:7",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "stop_light_switch_sub_1",
+                "expression": "B6:0",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "stop_light_switch_sub_2",
+                "expression": "B6:1",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "stop_light_switch_main",
+                "expression": "B6:2",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "cruise_res_acc_switch",
+                "expression": "B6:3",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "cruise_set_coast_switch",
+                "expression": "B6:4",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "cruise_cancel_switch",
+                "expression": "B6:5",
+                "unit": "",
+                "min": "0",
+                "max": "1",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dtc",
+        "name": "DTC",
+        "status": "canonical",
+        "enabled": true,
+        "period_ms": 60000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "init": "ATSP6;ATSH7DF;ATCRA;",
+        "mqtt_topic": "",
+        "pids": [
+          {
+            "id": "storeddtc",
+            "pid": "03",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "StoredDTC",
+            "parameters": [
+              {
+                "name": "StoredDTC",
+                "expression": "DTC_RAW",
+                "unit": "",
+                "onchange": true,
+                "destination_type": "MQTT_Topic",
+                "send_to": "{topic_base}/autopid/group/dtc/stored",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "pendingdtc",
+            "pid": "07",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "PendingDTC",
+            "parameters": [
+              {
+                "name": "PendingDTC",
+                "expression": "DTC_RAW",
+                "unit": "",
+                "onchange": true,
+                "destination_type": "MQTT_Topic",
+                "send_to": "{topic_base}/autopid/group/dtc/pending",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          },
+          {
+            "id": "permanentdtc",
+            "pid": "0A",
+            "enabled": false,
+            "user_toggle": true,
+            "description": "PermanentDTC",
+            "parameters": [
+              {
+                "name": "PermanentDTC",
+                "expression": "DTC_RAW",
+                "unit": "",
+                "onchange": false,
+                "destination_type": "MQTT_Topic",
+                "send_to": "{topic_base}/autopid/group/dtc/permanent",
+                "enabled": true,
+                "status": "canonical"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hv-current",
+        "name": "HV Current",
+        "status": "optional",
+        "enabled": true,
+        "period_ms": 1000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "init": "ATSH7E3;",
+        "mqtt_topic": "{topic_base}/autopid/group/hv-current",
+        "pids": [
+          {
+            "id": "hv-battery-current-a",
+            "pid": "21CE",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "HV Battery Current",
+            "parameters": [
+              {
+                "name": "hv_battery_current_a",
+                "expression": "((B5*256)+B6)/100-327.68",
+                "unit": "A",
+                "min": "-100",
+                "max": "100",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hv-motor",
+        "name": "HV Motor",
+        "status": "optional",
+        "enabled": true,
+        "period_ms": 5000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "init": "ATSH7E2;",
+        "mqtt_topic": "{topic_base}/autopid/group/hv-motor",
+        "pids": [
+          {
+            "id": "mg2-rpm",
+            "pid": "21C3",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "Hybrid Control Data",
+            "parameters": [
+              {
+                "name": "mg2_rpm",
+                "expression": "((B4*256)+B5)-16383",
+                "unit": "RPM",
+                "min": "-10000",
+                "max": "10000",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "mg2_torque_nm",
+                "expression": "(32*B6)+(0.125*B7)-500",
+                "unit": "Nm",
+                "min": "-500",
+                "max": "500",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "mg1_rpm",
+                "expression": "((B11*256)+B12)-16383",
+                "unit": "RPM",
+                "min": "-15000",
+                "max": "15000",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "mg1_torque_nm",
+                "expression": "(32*B13)+(0.125*B14)-500",
+                "unit": "Nm",
+                "min": "-500",
+                "max": "500",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "ice_power_request_kw",
+                "expression": "((B15*256)+B17)/100",
+                "unit": "kW",
+                "min": "0",
+                "max": "100",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "ice_target_rpm",
+                "expression": "(B18*256)+B19",
+                "unit": "RPM",
+                "min": "0",
+                "max": "8000",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "ice_hybrid_ecu_rpm",
+                "expression": "(B20*256)+B21",
+                "unit": "RPM",
+                "min": "0",
+                "max": "8000",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              },
+              {
+                "name": "probe_b10",
+                "expression": "B10",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b11",
+                "expression": "B11",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b12",
+                "expression": "B12",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b13",
+                "expression": "B13",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b14",
+                "expression": "B14",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b15",
+                "expression": "B15",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b16",
+                "expression": "B16",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b17",
+                "expression": "B17",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b18",
+                "expression": "B18",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b19",
+                "expression": "B19",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b20",
+                "expression": "B20",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b21",
+                "expression": "B21",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b22",
+                "expression": "B22",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b23",
+                "expression": "B23",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "probe_b24",
+                "expression": "B24",
+                "unit": "raw",
+                "min": "0",
+                "max": "255",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "experimental"
+              },
+              {
+                "name": "hv_soc_hybrid_ecu",
+                "expression": "B25*0.392",
+                "unit": "%",
+                "min": "0",
+                "max": "100",
+                "onchange": false,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "body",
+        "name": "Body",
+        "status": "optional",
+        "enabled": true,
+        "period_ms": 60000,
+        "adjustable_period": true,
+        "can_disable": true,
+        "condition": "always",
+        "init": "ATSP6;ATSH7E0;ATCRA;",
+        "mqtt_topic": "{topic_base}/autopid/group/body",
+        "pids": [
+          {
+            "id": "46-ambientairtemperature",
+            "pid": "0146",
+            "enabled": true,
+            "user_toggle": true,
+            "description": "46-AmbientAirTemperature",
+            "parameters": [
+              {
+                "name": "46-AmbientAirTemperature",
+                "expression": "B3",
+                "unit": "",
+                "onchange": true,
+                "destination_type": "MQTT_Grp",
+                "enabled": true,
+                "status": "optional"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "passive_can": {
+    "rules": []
+  },
+  "provenance": {
+    "evidence": {
+      "kind": "device_snapshot",
+      "description": "Read-only GET /load_auto_pid of a Toyota Prius Gen 2 WiCAN PRO, captured on v1.1.0-rc.17 after the owner regrouped the PIDs (Body group added, test and odometer probe groups removed)",
+      "captured_at": "2026-11-02T01:36:40Z",
+      "device_firmware": "vehiclehub-wican-v1.1.0-rc.17",
+      "source_sha256": "ad549c3d9a150f50a8b2f8dc81d14f30cda1e397f4d6becf2c36507701f7bcfa"
+    },
+    "classification_basis": "VehicleHub source: packages/shared/src/validation.ts sanitizeSample aliases (canonical), prius-wican-candidates.ts (raw-only candidates, optional)",
+    "builder": "vehiclehub-profiles/tools/build_profile_from_snapshot.py",
+    "notes": [
+      "Evidence is a Prius Gen 2 running the configured_activity_signal READY provider (21C4 B12, parameter_id ready.activity.v1). A second Prius with a different group layout (Diagnostics 30 s, Readiness 60 s, Engine and Cruise Control 1 s, 21C3 and 21C4 merged) and an unconfirmed READY active_value is not used as evidence.",
+      "1.1.0 regroups 1.0.0: the Body group (0146 ambient air temperature, 60 s, ECU 7E0) is new; 0131 distance since codes cleared moved into Diagnostics; the on-demand TEST PDF 7E0 group and the disabled 7C0 Odometer group (2101 ODOM) are gone, and 0131 and 0146 now carry their standard field names instead of the test_7e0_* names.",
+      "probe_b10..probe_b24 (21C3) are reverse-engineering probes. They are experimental: rendered disabled unless the user enables them as a local override.",
+      "Hybrid battery, hybrid ECU and motor fields are VehicleHub raw-only candidates (recognition is not validation; resistance unit, current polarity and flag bits are unverified).",
+      "Cruise Control (21D3), Engine (21CD/21F3) and standard 01/41 readiness are published by the device but not mapped by VehicleHub; they are optional.",
+      "DTC PermanentDTC (0A) is disabled on the device and stays disabled by default.",
+      "send_to values on MQTT_Grp parameters are ignored by the firmware (MQTT_Grp publishes to the group topic) and are not carried in the profile.",
+      "The flat car-level PIDs on the device (SOC, odometer, oil change distance) are inert (car_specific disabled, not in any group) and unverified; the profile does not own or change them.",
+      "A passive CAN rule on the device is an unvalidated candidate; it is not part of this profile.",
+      "system_main_relay_flags is the firmware READY activity signal; its PID, group and parameter are locked so the vehicle_state descriptor always resolves."
+    ]
+  }
+}
