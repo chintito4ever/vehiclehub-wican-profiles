@@ -56,7 +56,7 @@
       "make": "Toyota",
       "model": "Prius",
       "powertrain": "hybrid",
-      "latest": "1.4.0",
+      "latest": "1.5.0",
       "versions": [
         {
           "version": "1.0.0",
@@ -92,6 +92,13 @@
           "path": "toyota/prius-gen2/1.4.0.json",
           "sha256": "96e66ebdc860b76995feab6063311a44442859f41795f4cf26531b00c7ea9c83",
           "size": 69146
+        },
+        {
+          "version": "1.5.0",
+          "status": "complete",
+          "path": "toyota/prius-gen2/1.5.0.json",
+          "sha256": "83debc46f96b8262883433c9352015e4005c8f540ec21cc655d889c46c1820c1",
+          "size": 69410
         }
       ],
       "generation": "Gen 2 (NHW20)"
